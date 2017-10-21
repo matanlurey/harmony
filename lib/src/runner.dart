@@ -33,6 +33,7 @@ class Runner extends CommandRunner<Null> {
 
   Runner(this._interface) : super('@Harmony', '') {
     addCommand(new _AboutCommand(_interface));
+    addCommand(new _UptimeCommand(_interface, new DateTime.now()));
   }
 
   @override
@@ -99,5 +100,23 @@ class _SeenCommand extends Command<Null> {
       return _interface.reply('Unknown');
     }
     return _interface.reply('Last seen ${timeAgo(seen)}');
+  }
+}
+
+class _UptimeCommand extends Command<Null> {
+  final Interface _interface;
+  final DateTime _lastOnline;
+
+  _UptimeCommand(this._interface, this._lastOnline);
+
+  @override
+  final name = 'uptime';
+
+  @override
+  final description = 'Since when the bot connected';
+
+  @override
+  Future<Null> run() async {
+    return _interface.reply('Online since ${timeAgo(_lastOnline)}');
   }
 }

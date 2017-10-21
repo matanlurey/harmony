@@ -147,9 +147,11 @@ packages:
     version: "0.15.2"
   io:
     description:
-      name: io
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "291577ea0ffb7e8e59df352415ea85da10fc88f2"
+      resolved-ref: "291577ea0ffb7e8e59df352415ea85da10fc88f2"
+      url: "https://github.com/matanlurey/io"
+    source: git
     version: "0.3.0"
   isolate:
     description:
@@ -312,7 +314,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.26"
+    version: "0.12.24+8"
   timeago:
     description:
       name: timeago

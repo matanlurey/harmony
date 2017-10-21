@@ -13,6 +13,7 @@ import 'package:cable_stackdriver/cable_stackdriver.dart';
 Future<T> initLogging<T>(
   T Function<T>() run, {
   Map<String, Object> googleCloudKey: const {},
+  Severity severity: Severity.info,
 }) async {
   String name = googleCloudKey['project_id'];
   if (name == null) {
@@ -31,7 +32,7 @@ Future<T> initLogging<T>(
   ).scope<T>(() {
     log(
       'Logging initialized ${googleCloudKey.isNotEmpty ? '(GCP)' : '(Local)'}',
-      severity: Severity.info,
+      severity: severity,
     );
     return run();
   });

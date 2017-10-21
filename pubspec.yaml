@@ -15,6 +15,9 @@ dependencies:
   cable_stackdriver:
   din:
   io:
+    git:
+      url: https://github.com/matanlurey/io
+      ref: 291577ea0ffb7e8e59df352415ea85da10fc88f2
   stack_trace:
   timeago: ^1.0.0
 

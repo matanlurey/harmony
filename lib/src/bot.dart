@@ -43,7 +43,8 @@ class HarmonyBot {
 
   Future<Null> _onMessage(din.Message message) async {
     if (message.mentions.length == 1 &&
-        message.mentions.first.id == _loggedInAs.id) {
+        message.mentions.first.id == _loggedInAs.id &&
+        message.content.startsWith('<@')) {
       log(
         'Received message from "${message.user.name}".\n${message.content}',
         severity: Severity.info,
@@ -64,7 +65,6 @@ class HarmonyBot {
     await _gateway.close();
   }
 }
-
 
 class _Interface implements Interface {
   final din.ApiClient _api;

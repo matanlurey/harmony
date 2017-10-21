@@ -10,6 +10,7 @@ import 'package:cable/cable.dart';
 import 'package:harmony/harmony.dart';
 import 'package:harmony/src/logger.dart';
 import 'package:harmony/src/safety.dart';
+import 'package:stack_trace_codec/stack_trace_codec.dart';
 
 Future<Null> main(List<String> args) async {
   var json = const <String, Object>{};
@@ -26,7 +27,8 @@ Future<Null> main(List<String> args) async {
       await bot.close();
       log('Exiting...', severity: Severity.info);
     }, (e, s) {
-      log('UNHANDLED EXCEPTION: $e\n$s', severity: Severity.error);
+      log('UNHANDLED EXCEPTION: $e', severity: Severity.error);
+      log(const JsonTraceCodec().encode(s.toTrace()), severity: Severity.error);
     });
   }, googleCloudKey: json);
 }

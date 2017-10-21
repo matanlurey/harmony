@@ -5,7 +5,7 @@
 import 'package:stack_trace/stack_trace.dart';
 
 /// Execute [run], invoking [onError] if an unhandled exception is thrown.
-T runSafely<T>(T Function() run, void Function(Object, StackTrace) onError) {
+T runSafely<T>(T Function() run, void Function(Object, Chain) onError) {
   return Chain.capture(run, onError: (Object error, chain) {
     onError(error, chain.terse);
   });

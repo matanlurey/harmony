@@ -293,6 +293,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  stack_trace_codec:
+    description:
+      name: stack_trace_codec
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   stream_channel:
     description:
       name: stream_channel

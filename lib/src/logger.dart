@@ -21,7 +21,7 @@ Future<T> initLogging<T>(
   } else {
     name = 'projects/$name/logs/bot';
   }
-  return new Logger<String>(
+  return new Logger<Object>(
     destinations: [
       LogSink.printSink,
       googleCloudKey.isNotEmpty

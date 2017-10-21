@@ -4,7 +4,7 @@ description: >
 version: 0.1.0
 authors:
   - Matan Lurey <matan@lurey.org>
-homepage: https://github.com/matanlurey/harmony-bot
+homepage: https://github.com/matanlurey/harmony
 
 environment:
   sdk: ">=1.22.0 <2.0.0"
@@ -14,9 +14,12 @@ dependencies:
   cable:
   cable_stackdriver:
   din:
+    git:
+      url: https://github.com/matanlurey/din.git
+      ref: new-dev
   io:
     git:
-      url: https://github.com/matanlurey/io
+      url: https://github.com/matanlurey/io.git
       ref: 291577ea0ffb7e8e59df352415ea85da10fc88f2
   stack_trace:
   timeago: ^1.0.0

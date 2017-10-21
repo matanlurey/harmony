@@ -13,7 +13,7 @@ void main() {
 
     test('help should emit usage instructions', () async {
       when(interface.formatForMarkdown).thenReturn(true);
-      await new Runner(interface).run(['help']);
+      await new Runner(interface, null).run(['help']);
       verify(
         // TODO(https://github.com/dart-lang/mockito/issues/80).
         // ignore: argument_type_not_assignable
@@ -29,14 +29,14 @@ void main() {
 
     test('about should emit the bot name and version', () async {
       when(interface.botNameAndVersion).thenReturn('Bot v1.0.0');
-      await new Runner(interface).run(['about']);
+      await new Runner(interface, null).run(['about']);
       verify(interface.reply('Bot v1.0.0'));
     });
 
     group('seen', () {
       test('should emit unknown if not seen', () async {
         when(interface.lastSeen('123')).thenAnswer((_) async => null);
-        await new Runner(interface).run(['seen', '123']);
+        await new Runner(interface, null).run(['seen', '123']);
         verify(interface.reply('Unknown'));
       });
 
@@ -47,7 +47,7 @@ void main() {
 
         // TODO(https://github.com/andresaraujo/timeago.dart/issues/9).
         // Can't give a precise timestamp because there is no testability.
-        await new Runner(interface).run(['seen', '123']);
+        await new Runner(interface, null).run(['seen', '123']);
 
         // TODO(https://github.com/dart-lang/mockito/issues/80).
         // ignore: argument_type_not_assignable

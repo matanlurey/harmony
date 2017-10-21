@@ -29,7 +29,7 @@ Future<Null> main(List<String> args) async {
         exit(0);
       });
       log('Starting in HEADLESS mode...', severity: Severity.notice);
-      final runner = new Runner(const _Headless());
+      final runner = new Runner(const _Headless(), new DateTime.now());
       log('Listening for commands...', severity: Severity.notice);
       await for (final line in sharedStdIn.lines()) {
         try {

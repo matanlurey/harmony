@@ -30,10 +30,11 @@ abstract class Interface {
 
 class Runner extends CommandRunner<Null> {
   final Interface _interface;
+  final DateTime _lastOnline;
 
-  Runner(this._interface) : super('@Harmony', '') {
+  Runner(this._interface, this._lastOnline) : super('@Harmony', '') {
     addCommand(new _AboutCommand(_interface));
-    addCommand(new _UptimeCommand(_interface, new DateTime.now()));
+    addCommand(new _UptimeCommand(_interface, _lastOnline));
   }
 
   @override

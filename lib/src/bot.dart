@@ -34,8 +34,10 @@ class HarmonyBot {
   final din.GatewayClient _gateway;
 
   List<StreamSubscription> _streamSubs;
+  DateTime _lastOnline;
 
   HarmonyBot._(this._loggedInAs, this._client, this._gateway) {
+    _lastOnline = new DateTime.now();
     _streamSubs = [
       _gateway.events.messageCreate.listen(_onMessage),
     ];
@@ -50,7 +52,10 @@ class HarmonyBot {
         severity: Severity.info,
       );
       Iterable<String> args = shellSplit(message.content);
-      final runner = new Runner(new _Interface(_client, message.channelId));
+      final runner = new Runner(
+        new _Interface(_client, message.channelId),
+        _lastOnline,
+      );
       args = args.skip(1);
       try {
         await runner.run(args);

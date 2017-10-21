@@ -57,7 +57,7 @@ class _Headless implements Interface {
 
   @override
   Future<Null> reply(String message) async {
-    print(ansi.wrapWith(_indent4('<REPLY> $message'), [
+    print(ansi.wrapWith(_indent4(message), [
       ansi.darkGray,
     ]));
   }

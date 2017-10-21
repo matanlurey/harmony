@@ -57,7 +57,31 @@ class Runner extends CommandRunner<Null> {
   }
 }
 
-class _AboutCommand extends Command<Null> {
+abstract class _CommandMixin implements Command<Null> {
+  Interface get _interface;
+
+  @override
+  printUsage() {
+    if (_interface.formatForMarkdown) {
+      _interface.reply('```\n$usage\n```');
+    } else {
+      _interface.reply(usage);
+    }
+  }
+
+  @override
+  usageException(String message) {
+    if (_interface.formatForMarkdown) {
+      _interface.reply('$message\n```\n$usage\n```');
+    }
+    // TODO(https://github.com/dart-lang/args/issues/81).
+    // Remove after it's safe not to always throw an exception.
+    return super.usageException(message);
+  }
+}
+
+class _AboutCommand extends Command<Null> with _CommandMixin {
+  @override
   final Interface _interface;
 
   _AboutCommand(this._interface);
@@ -76,7 +100,8 @@ class _AboutCommand extends Command<Null> {
 
 // TODO: Add once supported.
 // ignore: unused_element
-class _SeenCommand extends Command<Null> {
+class _SeenCommand extends Command<Null> with _CommandMixin {
+  @override
   final Interface _interface;
 
   _SeenCommand(this._interface);
@@ -104,7 +129,8 @@ class _SeenCommand extends Command<Null> {
   }
 }
 
-class _UptimeCommand extends Command<Null> {
+class _UptimeCommand extends Command<Null> with _CommandMixin {
+  @override
   final Interface _interface;
   final DateTime _lastOnline;
 
@@ -114,7 +140,7 @@ class _UptimeCommand extends Command<Null> {
   final name = 'uptime';
 
   @override
-  final description = 'Since when the bot connected';
+  final description = 'Display when the bot connected';
 
   @override
   Future<Null> run() async {

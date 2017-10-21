@@ -1,4 +1,8 @@
 analyzer:
+  language:
+    enableStrictCallChecks: true
+    enableSuperMixins: true
+    enableAssertInitializer: true
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false

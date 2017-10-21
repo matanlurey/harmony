@@ -48,9 +48,10 @@ class Runner extends CommandRunner<Null> {
   usageException(String message) {
     if (_interface.formatForMarkdown) {
       _interface.reply('$message\n```\n$usage\n```');
-    } else {
-      return super.usageException(message);
     }
+    // TODO(https://github.com/dart-lang/args/issues/81).
+    // Remove after it's safe not to always throw an exception.
+    return super.usageException(message);
   }
 }
 

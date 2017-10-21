@@ -15,6 +15,7 @@ dependencies:
   cable_stackdriver:
   din:
   io:
+  stack_trace:
   timeago: ^1.0.0
 
 dev_dependencies:

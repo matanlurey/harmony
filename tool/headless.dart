@@ -30,6 +30,7 @@ Future<Null> main(List<String> args) async {
       });
       log('Starting in HEADLESS mode...', severity: Severity.notice);
       final runner = new Runner(const _Headless());
+      log('Listening for commands...', severity: Severity.notice);
       await for (final line in sharedStdIn.lines()) {
         try {
           await runner.run(shellSplit(line));

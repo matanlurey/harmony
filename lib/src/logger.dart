@@ -15,20 +15,17 @@ Future<T> initLogging<T>(
   Map<String, Object> googleCloudKey: const {},
   Severity severity: Severity.info,
 }) async {
-  String name = googleCloudKey['project_id'];
-  if (name == null) {
-    name = 'harmony';
-  } else {
-    name = 'projects/$name/logs/bot';
-  }
   return new Logger<Object>(
     destinations: [
       LogSink.printSink,
       googleCloudKey.isNotEmpty
-          ? await Stackdriver.serviceAccount<String>(googleCloudKey)
+          ? await Stackdriver.serviceAccount<String>(
+              googleCloudKey,
+              logName: googleCloudKey['project_id'] as String,
+            )
           : LogSink.nullSink,
     ],
-    name: name,
+    name: 'harmony',
     severity: severity,
   ).scope<T>(() {
     log(

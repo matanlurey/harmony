@@ -45,10 +45,12 @@ packages:
     version: "0.1.0+1"
   cable_stackdriver:
     description:
-      name: cable_stackdriver
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
+      path: "."
+      ref: HEAD
+      resolved-ref: e6fc054d8f2477fe4766a3c92601c053211321e5
+      url: "https://github.com/matanlurey/cable-stackdriver.git"
+    source: git
+    version: "0.1.1"
   charcode:
     description:
       name: charcode

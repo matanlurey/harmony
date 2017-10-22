@@ -45,7 +45,9 @@ class HarmonyBot {
   HarmonyBot._(this._cache, this._loggedInAs, this._client, this._gateway) {
     _lastOnline = new DateTime.now();
     _gateway.onClose.then((reason) {
-      log('Gateway closed: $reason', severity: Severity.critical);
+      if (reason != null) {
+        log('Gateway closed: $reason', severity: Severity.critical);
+      }
     });
     _streamSubs = [
       _gateway.events.messageCreate.listen(_onMessage),

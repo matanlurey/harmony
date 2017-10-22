@@ -21,7 +21,7 @@ Future<T> initLogging<T>(
       googleCloudKey.isNotEmpty
           ? await Stackdriver.serviceAccount<String>(
               googleCloudKey,
-              toJson: (j) => j,
+              toJson: (j) => j as Map<String, Object>,
               logName: 'projects/${googleCloudKey['project_id']}/logs/bot',
             )
           : LogSink.nullSink,

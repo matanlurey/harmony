@@ -37,7 +37,10 @@ Future<Null> main(List<String> args) async {
       log('Exiting...', severity: Severity.info);
     }, (e, s) {
       log('UNHANDLED EXCEPTION: $e', severity: Severity.error);
-      log(const JsonTraceCodec().encode(s.toTrace()), severity: Severity.error);
+      log({
+        'error': '$e',
+        'stack': const JsonTraceCodec().encode(s.toTrace()),
+      }, severity: Severity.error);
     });
   }, googleCloudKey: json, severity: Severity.debug);
 }

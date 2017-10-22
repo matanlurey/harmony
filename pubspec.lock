@@ -89,7 +89,7 @@ packages:
     description:
       path: "."
       ref: new-dev
-      resolved-ref: e796fb777fb6d60ed5855db0c8b698c11b409598
+      resolved-ref: e3c0f944ed4c2bcbd3ee9a418c4a13f2daa1bb58
       url: "https://github.com/matanlurey/din.git"
     source: git
     version: "0.1.0-alpha+7"

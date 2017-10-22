@@ -5,30 +5,49 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
+import 'package:args/args.dart';
 import 'package:cable/cable.dart';
 import 'package:harmony/harmony.dart';
+import 'package:harmony/src/cache.dart';
 import 'package:harmony/src/logger.dart';
 import 'package:harmony/src/safety.dart';
 import 'package:stack_trace_codec/stack_trace_codec.dart';
 
 Future<Null> main(List<String> args) async {
+  final results = _parser.parse(args);
   var json = const <String, Object>{};
-  if (args.length > 1) {
+  Cache<Object, Object> cache = const NullCache();
+  if (results.wasParsed('gcloud-json-path')) {
+    final path = results['gcloud-json-path'] as String;
     // ignore: invalid_assignment
-    json = JSON.decode(new File(args.last).readAsStringSync());
+    json = JSON.decode(new File(path).readAsStringSync());
+  }
+  if (results['cache'] == true) {
+    cache = new MemoryCache();
   }
   // ignore: argument_type_not_assignable
   return initLogging(() {
+    final sub = Isolate.current.errors.listen((Object error) {
+      log('UNHANDLED EXCEPTINON: $error', severity: Severity.critical);
+    });
     return runSafely(() async {
-      final bot = await HarmonyBot.connect(args.first);
+      final key = results['discord-api-key'] as String;
+      final bot = await HarmonyBot.connect(key, cache: cache);
       await ProcessSignal.SIGINT.watch().first;
       log('Received SIGINT...', severity: Severity.notice);
+      await sub.cancel();
       await bot.close();
       log('Exiting...', severity: Severity.info);
     }, (e, s) {
       log('UNHANDLED EXCEPTION: $e', severity: Severity.error);
       log(const JsonTraceCodec().encode(s.toTrace()), severity: Severity.error);
     });
-  }, googleCloudKey: json);
+  }, googleCloudKey: json, severity: Severity.debug);
 }
+
+final _parser = new ArgParser()
+  ..addOption('discord-api-key', abbr: 'd', help: 'Discord API Key')
+  ..addOption('gcloud-json-path', abbr: 'g', help: 'Google Cloud JSON Path')
+  ..addFlag('cache', abbr: 'c', defaultsTo: false);

@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:cable/cable.dart';
+import 'package:harmony/src/cache.dart';
 import 'package:harmony/src/logger.dart';
 import 'package:harmony/src/runner.dart';
 import 'package:harmony/src/safety.dart';
@@ -29,7 +30,11 @@ Future<Null> main(List<String> args) async {
         exit(0);
       });
       log('Starting in HEADLESS mode...', severity: Severity.notice);
-      final runner = new Runner(const _Headless(), new DateTime.now());
+      final runner = new Runner(
+        const _Headless(),
+        const NullCache(),
+        new DateTime.now(),
+      );
       log('Listening for commands...', severity: Severity.notice);
       await for (final line in sharedStdIn.lines()) {
         try {
@@ -63,8 +68,6 @@ class _Headless implements Interface {
     ]));
   }
 
-  static String _indent4(String input) => input
-      .split('\n')
-      .map((line) => "${(' ' * 4)}$line")
-      .join('\n');
+  static String _indent4(String input) =>
+      input.split('\n').map((line) => "${(' ' * 4)}$line").join('\n');
 }

@@ -29,10 +29,11 @@ Future<T> initLogging<T>(
           : LogSink.nullSink,
     ],
     name: name,
+    severity: severity,
   ).scope<T>(() {
     log(
       'Logging initialized ${googleCloudKey.isNotEmpty ? '(GCP)' : '(Local)'}',
-      severity: severity,
+      severity: Severity.notice,
     );
     return run();
   });

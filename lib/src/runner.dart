@@ -3,9 +3,15 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
+import 'dart:math' show Random;
 
 import 'package:args/command_runner.dart';
+import 'package:cable/cable.dart';
+import 'package:http/http.dart';
 import 'package:timeago/timeago.dart';
+
+import 'cache.dart';
 
 /// A limited interface into bot functionality to implement commands.
 abstract class Interface {
@@ -30,10 +36,17 @@ abstract class Interface {
 
 class Runner extends CommandRunner<Null> {
   final Interface _interface;
+  final Cache<Object, Object> _cache;
   final DateTime _lastOnline;
 
-  Runner(this._interface, this._lastOnline) : super('@Harmony', '') {
+  Runner(
+    this._interface,
+    this._cache,
+    this._lastOnline,
+  )
+      : super('@Harmony', '') {
     addCommand(new _AboutCommand(_interface));
+    addCommand(new _JokeCommand(_interface, _cache));
     addCommand(new _UptimeCommand(_interface, _lastOnline));
   }
 
@@ -95,6 +108,60 @@ class _AboutCommand extends Command<Null> with _CommandMixin {
   @override
   Future<Null> run() async {
     await _interface.reply(_interface.botNameAndVersion);
+  }
+}
+
+class _JokeCommand extends Command<Null> with _CommandMixin {
+  @override
+  final Interface _interface;
+  final Cache<Object, Object> _cache;
+
+  _JokeCommand(this._interface, this._cache);
+
+  @override
+  final name = 'joke';
+
+  @override
+  final description = 'Tells a random joke';
+
+  static const _apiEndpoint =
+      'https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten';
+
+  @override
+  Future<Null> run() async {
+    log('Checking cache for jokes...', severity: Severity.debug);
+    final jokes = await _cache.get(
+      'random-joke',
+      age: const Duration(minutes: 1),
+      absent: (_) {
+        log('Cache miss. Calling API for jokes...', severity: Severity.debug);
+        return get(_apiEndpoint)
+            .then((response) {
+              log(
+                'Got a response from the jokes API!',
+                severity: Severity.debug,
+              );
+              final json = JSON.decode(
+                response.body,
+              ) as List<Map<String, Object>>;
+              return json;
+            })
+            .timeout(const Duration(seconds: 5))
+            .catchError((Object e) async {
+              log('Error calling jokes API: $e', severity: Severity.warning);
+              await _interface.reply('I forgot my joke. Ask me later');
+            });
+      },
+    );
+    if (jokes != null) {
+      final random = new Random();
+      final joke = jokes[random.nextInt(jokes.length)];
+      final setup = joke['setup'] as String;
+      final punch = joke['punchline'];
+      await _interface.reply('_${setup}_');
+      await new Future<Null>.delayed(const Duration(seconds: 4));
+      await _interface.reply('_${punch}_');
+    }
   }
 }
 

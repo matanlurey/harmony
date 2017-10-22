@@ -9,10 +9,14 @@ import 'package:cable/cable.dart';
 import 'package:din/din.dart' as din;
 import 'package:io/io.dart';
 
+import 'cache.dart';
 import 'runner.dart';
 
 class HarmonyBot {
-  static Future<HarmonyBot> connect(String apiKey) async {
+  static Future<HarmonyBot> connect(
+    String apiKey, {
+    Cache<Object, Object> cache: const NullCache(),
+  }) async {
     final client = new din.ApiClient(
       rest: new din.RestClient(
         auth: new din.AuthScheme.asBot(apiKey),
@@ -23,12 +27,14 @@ class HarmonyBot {
     final gateway = await client.connect(connection.url);
     log('Connected to ${connection.url}!', severity: Severity.notice);
     return new HarmonyBot._(
+      cache,
       await gateway.events.ready.first.then((r) => r.user),
       client,
       gateway,
     );
   }
 
+  final Cache<Object, Object> _cache;
   final din.User _loggedInAs;
   final din.ApiClient _client;
   final din.GatewayClient _gateway;
@@ -36,8 +42,11 @@ class HarmonyBot {
   List<StreamSubscription> _streamSubs;
   DateTime _lastOnline;
 
-  HarmonyBot._(this._loggedInAs, this._client, this._gateway) {
+  HarmonyBot._(this._cache, this._loggedInAs, this._client, this._gateway) {
     _lastOnline = new DateTime.now();
+    _gateway.onClose.then((reason) {
+      log('Gateway closed: $reason', severity: Severity.critical);
+    });
     _streamSubs = [
       _gateway.events.messageCreate.listen(_onMessage),
     ];
@@ -54,6 +63,7 @@ class HarmonyBot {
       Iterable<String> args = shellSplit(message.content);
       final runner = new Runner(
         new _Interface(_client, message.channelId),
+        _cache,
         _lastOnline,
       );
       args = args.skip(1);
@@ -65,7 +75,12 @@ class HarmonyBot {
     }
   }
 
+  Future<Null> _onHeartBeat(int ping) async {
+    log('Heartbeat took ${ping}ms', severity: Severity.debug);
+  }
+
   Future<Null> close() async {
+    await _cache.clear();
     await Future.wait<dynamic>(_streamSubs.map((s) => s.cancel()));
     await _gateway.close();
   }

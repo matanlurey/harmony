@@ -13,7 +13,9 @@ dependencies:
   args: ^1.0.0
   cable:
   cable_stackdriver:
-    git: https://github.com/matanlurey/cable-stackdriver.git
+    git:
+      url: https://github.com/matanlurey/cable-stackdriver.git
+      ref: use-buffer-and-name
   din:
     git:
       url: https://github.com/matanlurey/din.git

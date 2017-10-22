@@ -28,6 +28,9 @@ abstract class Cache<K, V> {
   /// Returns whether the data was added or not.
   Future<bool> put<T extends V>(K key, T data, {DateTime now});
 
+  /// Remove [key], returning whether it existed in the cache.
+  Future<bool> remove(K key);
+
   /// Size (number of items in the) of cache.
   Future<int> get size;
 }
@@ -100,6 +103,12 @@ class MemoryCache<K, V> implements Cache<K, V> {
   }
 
   @override
+  Future<bool> remove(K key) {
+    _pairs.remove(key);
+    return new Future.value(_stack.remove(key));
+  }
+
+  @override
   Future<int> get size => new Future.value(_stack.length);
 }
 
@@ -126,6 +135,9 @@ class NullCache<K, V> implements Cache<K, V> {
   Future<bool> put<T extends V>(K key, T data, {DateTime now}) {
     return new Future.value(true);
   }
+
+  @override
+  Future<bool> remove(K key) => new Future.value(false);
 
   @override
   Future<int> get size => new Future.value(0);

@@ -155,9 +155,12 @@ class _JokeCommand extends Command<Null> with _CommandMixin {
     );
     if (jokes != null) {
       final random = new Random();
-      final joke = jokes[random.nextInt(jokes.length)];
+      final joke = jokes.removeAt(random.nextInt(jokes.length));
       final setup = joke['setup'] as String;
       final punch = joke['punchline'];
+      if (jokes.isEmpty) {
+        await _cache.remove('random-joke');
+      }
       await _interface.reply('_${setup}_');
       await new Future<Null>.delayed(const Duration(seconds: 4));
       await _interface.reply('_${punch}_');

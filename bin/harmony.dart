@@ -27,7 +27,7 @@ Future<Null> main(List<String> args) async {
     cache = new MemoryCache();
   }
   // ignore: argument_type_not_assignable
-  return initLogging(() {
+  await initLogging<Null>(() {
     return runSafely(() async {
       final key = results['discord-api-key'] as String;
       final bot = await HarmonyBot.connect(key, cache: cache);

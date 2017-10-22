@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:args/args.dart';
 import 'package:cable/cable.dart';
@@ -29,15 +28,11 @@ Future<Null> main(List<String> args) async {
   }
   // ignore: argument_type_not_assignable
   return initLogging(() {
-    final sub = Isolate.current.errors.listen((Object error) {
-      log('UNHANDLED EXCEPTINON: $error', severity: Severity.critical);
-    });
     return runSafely(() async {
       final key = results['discord-api-key'] as String;
       final bot = await HarmonyBot.connect(key, cache: cache);
       await ProcessSignal.SIGINT.watch().first;
       log('Received SIGINT...', severity: Severity.notice);
-      await sub.cancel();
       await bot.close();
       log('Exiting...', severity: Severity.info);
     }, (e, s) {

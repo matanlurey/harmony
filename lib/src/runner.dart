@@ -14,6 +14,7 @@ import 'package:timeago/timeago.dart';
 import 'cache.dart';
 
 part 'commands/about.dart';
+part 'commands/flip.dart';
 part 'commands/joke.dart';
 part 'commands/uptime.dart';
 part 'commands/roll.dart';
@@ -25,6 +26,9 @@ abstract class Interface {
 
   /// Whether to attempt to reply with markdown formatting.
   bool get formatForMarkdown;
+
+  /// Random, potentially seeded.
+  Random get random;
 
   /// Reply on the channel ID the commands was received with [message].
   Future<Null> reply(String message);
@@ -42,6 +46,7 @@ class Runner extends CommandRunner<Null> {
   )
       : super('@Harmony', '') {
     addCommand(new _AboutCommand(_interface));
+    addCommand(new _FlipCommand(_interface));
     addCommand(new _JokeCommand(_interface, _cache));
     addCommand(new _UptimeCommand(_interface, _lastOnline));
     addCommand(new _RollCommand(_interface));

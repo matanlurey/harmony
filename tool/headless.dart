@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' show Random;
 
 import 'package:args/command_runner.dart';
 import 'package:cable/cable.dart';
@@ -50,6 +51,8 @@ Future<Null> main(List<String> args) async {
 }
 
 class _Headless implements Interface {
+  static final _random = new Random(0);
+
   const _Headless();
 
   @override
@@ -57,6 +60,9 @@ class _Headless implements Interface {
 
   @override
   bool get formatForMarkdown => false;
+
+  @override
+  Random get random => _random;
 
   @override
   Future<Null> reply(String message) async {

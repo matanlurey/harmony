@@ -5,10 +5,6 @@
 part of '../runner.dart';
 
 class _RollCommand extends Command<Null> with _CommandMixin {
-  static final _rng = new Random();
-
-  static int _roll(int sides) => _rng.nextInt(sides) + 1;
-
   @override
   final Interface _interface;
 
@@ -19,6 +15,8 @@ class _RollCommand extends Command<Null> with _CommandMixin {
 
   @override
   final description = 'Roll a dice in the format of NdN.';
+
+  int _roll(int sides) => _interface.random.nextInt(sides) + 1;
 
   @override
   Future<Null> run() async {

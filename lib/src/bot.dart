@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:math' show Random;
 
 import 'package:args/command_runner.dart';
 import 'package:cable/cable.dart';
@@ -95,6 +96,9 @@ class _Interface implements Interface {
 
   @override
   bool get formatForMarkdown => true;
+
+  @override
+  final Random random = new Random.secure();
 
   @override
   Future<Null> reply(String message) async {

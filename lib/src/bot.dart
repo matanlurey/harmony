@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math' show Random;
 
 import 'package:args/command_runner.dart';
@@ -52,20 +53,28 @@ class HarmonyBot {
     });
     _streamSubs = [
       _gateway.events.messageCreate.listen(_onMessage),
+      _gateway.events.guildCreate.listen(_onGuildCreate),
+      _gateway.events.presenceUpdate.listen(_onPresence),
+      _gateway.events.unknownEvent.listen(_onUnknown),
     ];
   }
 
+  Future<Null> _onGuildCreate(din.Guild guild) async {
+    guild.presences.forEach(_onPresence);
+  }
+
   Future<Null> _onMessage(din.Message message) async {
-    if (message.mentions.length == 1 &&
-        message.mentions.first.id == _loggedInAs.id &&
-        message.content.startsWith('<@')) {
+    final mentions = message.mentions.reversed.toList();
+    if (mentions.isNotEmpty &&
+        mentions.first.id == _loggedInAs.id &&
+        message.content.startsWith('<@${_loggedInAs.id}')) {
       log(
         'Received message from "${message.user.name}".\n${message.content}',
         severity: Severity.info,
       );
       Iterable<String> args = shellSplit(message.content);
       final runner = new Runner(
-        new _Interface(_client, message.channelId),
+        _createInterface(message.channelId, mentions.skip(1).toList()),
         _cache,
         _lastOnline,
       );
@@ -76,6 +85,42 @@ class HarmonyBot {
         // TODO(https://github.com/dart-lang/args/issues/81).
       }
     }
+  }
+
+  Interface _createInterface(String channelId, List<din.User> mentions) {
+    return new _Interface(
+      _client,
+      mentions,
+      channelId,
+      lastSeenOnline: (id) => _isCurrentlyOnline.contains(id)
+          ? new DateTime.now()
+          : _lastSeenOnline[id],
+    );
+  }
+
+  // User ID --> DateTime.
+  final _isCurrentlyOnline = new Set<String>();
+  final _lastSeenOnline = <String, DateTime>{};
+
+  Future<Null> _onPresence(din.PresenceUpdate update) async {
+    if (update.status == 'online') {
+      _isCurrentlyOnline.add(update.user.id);
+      _lastSeenOnline.remove(update.user.id);
+    } else {
+      _isCurrentlyOnline.remove(update.user.id);
+      _lastSeenOnline[update.user.id] = new DateTime.now();
+    }
+  }
+
+  Future<Null> _onUnknown(din.GatewayDispatch dispatch) async {
+    log(
+      {
+        'name': dispatch.name,
+        'opcode': dispatch.op,
+        'data': const JsonEncoder.withIndent('  ').convert(dispatch.data),
+      },
+      severity: Severity.debug,
+    );
   }
 
   Future<Null> close() async {
@@ -89,13 +134,27 @@ class _Interface implements Interface {
   final din.ApiClient _api;
   final String _channelId;
 
-  _Interface(this._api, this._channelId);
+  @override
+  final List<din.User> mentions;
+
+  final DateTime Function(String) _lastSeen;
+
+  _Interface(
+    this._api,
+    this.mentions,
+    this._channelId, {
+    DateTime Function(String) lastSeenOnline,
+  })
+      : this._lastSeen = lastSeenOnline;
 
   @override
   String get botNameAndVersion => 'Harmony v0.1.0-dev+1';
 
   @override
   bool get formatForMarkdown => true;
+
+  @override
+  DateTime lastSeenOnline(String id) => _lastSeen(id);
 
   @override
   final Random random = new Random.secure();

@@ -45,11 +45,9 @@ packages:
     version: "0.1.0+1"
   cable_stackdriver:
     description:
-      path: "."
-      ref: master
-      resolved-ref: e6fc054d8f2477fe4766a3c92601c053211321e5
-      url: "https://github.com/matanlurey/cable-stackdriver.git"
-    source: git
+      name: cable_stackdriver
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.1.1"
   charcode:
     description:
@@ -89,9 +87,11 @@ packages:
     version: "0.14.1"
   din:
     description:
-      name: din
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: more-feat
+      resolved-ref: "183ffa281d3f28db25326511f208c030f92e0083"
+      url: "https://github.com/matanlurey/din.git"
+    source: git
     version: "0.1.0-alpha+8"
   front_end:
     description:
@@ -360,4 +360,4 @@ packages:
     source: hosted
     version: "2.1.13"
 sdks:
-  dart: ">=1.25.0-dev <=2.0.0-dev.3.0"
+  dart: ">=1.25.0-dev <=2.0.0-dev.8.0"

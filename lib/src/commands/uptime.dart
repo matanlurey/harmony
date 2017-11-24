@@ -15,7 +15,7 @@ class _UptimeCommand extends Command<Null> with _CommandMixin {
   final name = 'uptime';
 
   @override
-  final description = 'Display when the bot connected';
+  final description = 'Display when the bot connected.';
 
   @override
   Future<Null> run() async {

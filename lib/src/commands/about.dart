@@ -14,7 +14,7 @@ class _AboutCommand extends Command<Null> with _CommandMixin {
   final name = 'about';
 
   @override
-  final description = 'Display the bot name and version';
+  final description = 'Display the bot name and version.';
 
   @override
   Future<Null> run() async {

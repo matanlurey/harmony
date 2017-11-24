@@ -15,7 +15,7 @@ class _JokeCommand extends Command<Null> with _CommandMixin {
   final name = 'joke';
 
   @override
-  final description = 'Tells a random joke';
+  final description = 'Tell a random joke.';
 
   static const _apiEndpoint =
       'https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten';

@@ -9,6 +9,7 @@ import 'dart:math' show Random;
 
 import 'package:args/command_runner.dart';
 import 'package:cable/cable.dart';
+import 'package:din/din.dart' as din;
 import 'package:harmony/src/cache.dart';
 import 'package:harmony/src/logger.dart';
 import 'package:harmony/src/runner.dart';
@@ -60,6 +61,12 @@ class _Headless implements Interface {
 
   @override
   bool get formatForMarkdown => false;
+
+  @override
+  DateTime lastSeenOnline(String id) => null;
+
+  @override
+  List<din.User> get mentions => const [];
 
   @override
   Random get random => _random;

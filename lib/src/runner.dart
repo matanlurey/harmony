@@ -8,6 +8,7 @@ import 'dart:math' show Random;
 
 import 'package:args/command_runner.dart';
 import 'package:cable/cable.dart';
+import 'package:din/din.dart' as din;
 import 'package:http/http.dart';
 import 'package:timeago/timeago.dart';
 
@@ -18,6 +19,7 @@ part 'commands/flip.dart';
 part 'commands/joke.dart';
 part 'commands/uptime.dart';
 part 'commands/roll.dart';
+part 'commands/seen.dart';
 
 /// A limited interface into bot functionality to implement commands.
 abstract class Interface {
@@ -26,6 +28,12 @@ abstract class Interface {
 
   /// Whether to attempt to reply with markdown formatting.
   bool get formatForMarkdown;
+
+  /// Returns when the specified [userId] was last seen online.
+  DateTime lastSeenOnline(String userId);
+
+  /// What users were mentioned in this last message, if any.
+  List<din.User> get mentions;
 
   /// Random, potentially seeded.
   Random get random;
@@ -50,6 +58,7 @@ class Runner extends CommandRunner<Null> {
     addCommand(new _JokeCommand(_interface, _cache));
     addCommand(new _UptimeCommand(_interface, _lastOnline));
     addCommand(new _RollCommand(_interface));
+    addCommand(new _SeenCommand(_interface));
   }
 
   @override

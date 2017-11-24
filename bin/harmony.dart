@@ -36,6 +36,10 @@ Future<Null> main(List<String> args) async {
       await bot.close();
       log('Exiting...', severity: Severity.info);
     }, (e, s) {
+      // Helps with debugging in checked mode.
+      if (_assertionsEnabled()) {
+        stderr.writeln('UNHANDLED EXCEPTION: $e:\n$s');
+      }
       log('UNHANDLED EXCEPTION: $e', severity: Severity.error);
       log({
         'error': '$e',
@@ -43,6 +47,12 @@ Future<Null> main(List<String> args) async {
       }, severity: Severity.error);
     });
   }, googleCloudKey: json, severity: Severity.debug);
+}
+
+bool _assertionsEnabled() {
+  var enabled = false;
+  assert(enabled = true);
+  return enabled;
 }
 
 final _parser = new ArgParser()

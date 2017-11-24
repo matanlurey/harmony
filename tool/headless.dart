@@ -59,9 +59,6 @@ class _Headless implements Interface {
   bool get formatForMarkdown => false;
 
   @override
-  Future<DateTime> lastSeen(String userId) async => null;
-
-  @override
   Future<Null> reply(String message) async {
     print(ansi.wrapWith(_indent4(message), [
       ansi.darkGray,

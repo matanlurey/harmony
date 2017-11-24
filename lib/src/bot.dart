@@ -70,15 +70,11 @@ class HarmonyBot {
       );
       args = args.skip(1);
       try {
-        await runner.run(args);
+        await runner.run(args.toList());
       } on UsageException catch (_) {
         // TODO(https://github.com/dart-lang/args/issues/81).
       }
     }
-  }
-
-  Future<Null> _onHeartBeat(int ping) async {
-    log('Heartbeat took ${ping}ms', severity: Severity.debug);
   }
 
   Future<Null> close() async {
@@ -95,13 +91,10 @@ class _Interface implements Interface {
   _Interface(this._api, this._channelId);
 
   @override
-  String get botNameAndVersion => 'Harmony v0.1.0-dev';
+  String get botNameAndVersion => 'Harmony v0.1.0-dev+1';
 
   @override
   bool get formatForMarkdown => true;
-
-  @override
-  Future<DateTime> lastSeen(String userId) async => null;
 
   @override
   Future<Null> reply(String message) async {

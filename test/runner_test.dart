@@ -32,28 +32,6 @@ void main() {
       await new Runner(interface, null, null).run(['about']);
       verify(interface.reply('Bot v1.0.0'));
     });
-
-    group('seen', () {
-      test('should emit unknown if not seen', () async {
-        when(interface.lastSeen('123')).thenAnswer((_) async => null);
-        await new Runner(interface, null, null).run(['seen', '123']);
-        verify(interface.reply('Unknown'));
-      });
-
-      test('should return a fuzzy timestamp if seen', () async {
-        when(interface.lastSeen('123')).thenAnswer((_) async {
-          return new DateTime.utc(2017);
-        });
-
-        // TODO(https://github.com/andresaraujo/timeago.dart/issues/9).
-        // Can't give a precise timestamp because there is no testability.
-        await new Runner(interface, null, null).run(['seen', '123']);
-
-        // TODO(https://github.com/dart-lang/mockito/issues/80).
-        // ignore: argument_type_not_assignable
-        verify(interface.reply(typed(argThat(startsWith('Last seen')))));
-      });
-    }, skip: 'Not current enabled.');
   });
 }
 

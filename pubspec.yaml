@@ -1,7 +1,7 @@
 name: harmony
 description: >
   Just a Bot.
-version: 0.1.0
+version: 0.1.0-dev+1
 authors:
   - Matan Lurey <matan@lurey.org>
 homepage: https://github.com/matanlurey/harmony
@@ -11,21 +11,18 @@ environment:
 
 dependencies:
   args: ^1.0.0
-  cable:
+  cable: ^0.1.0
   cable_stackdriver:
     git:
       url: https://github.com/matanlurey/cable-stackdriver.git
-      ref: use-buffer-and-name
-  din:
-    git:
-      url: https://github.com/matanlurey/din.git
-      ref: new-dev
+      ref: master
+  din: 0.1.0-alpha+8
   io:
     git:
-      url: https://github.com/matanlurey/io.git
-      ref: 291577ea0ffb7e8e59df352415ea85da10fc88f2
-  stack_trace:
-  stack_trace_codec:
+      url: https://github.com/dart-lang/io.git
+      ref: master
+  stack_trace: ^1.9.1
+  stack_trace_codec: ^0.1.0
   timeago: ^1.0.0
 
 dev_dependencies:

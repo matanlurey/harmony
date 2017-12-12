@@ -116,7 +116,7 @@ class HarmonyBot {
     log(
       {
         'name': dispatch.name,
-        'opcode': dispatch.op,
+        'opcode': dispatch.op.index,
         'data': const JsonEncoder.withIndent('  ').convert(dispatch.data),
       },
       severity: Severity.debug,
